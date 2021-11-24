@@ -12,8 +12,6 @@
 // -> rmexcept 	<- Removes all files except those specified
 // -> exit			<- Exits DSSH shell
 
-
-
 #define _XOPEN_SOURCE 700
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +25,7 @@
 #include <dirent.h>
 #include <ftw.h>
 #include <limits.h>
+#include<sys/utsname.h>
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -37,6 +36,10 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+#ifdef _WIN32
+    printf("You are on windows. This will not work.");
+		exit();
+#endif
 
 #ifndef MAX_BUF
 #define MAX_BUF 200
@@ -88,15 +91,15 @@ int sh_num_builtins() {
 
 int sh_help(char **args) {
 	int i;
-	printf("\n%aDSHH Help Information:\n", KMAG);
-	printf("%ahelp				%a<- Displays help menu with all built-in commands\n", KCYN, KWHT);
-	printf("%acd					%a<- Changes hirectory\n", KCYN, KWHT);
-	printf("%ahistory			%a- Displays shell command history\n", KCYN, KWHT);
-	printf("%aissue				%a<- Reruns command that was run a specified number of commands ago\n", KCYN, KWHT);
-	printf("%als					%a<- Prints files in current directory\n", KCYN, KWHT);
-	printf("%arm					%a<- Removes directory, or file\n", KCYN, KWHT);
-	printf("%armexcept		%a<- Removes all files except those specified\n", KCYN, KWHT);
-	printf("%aexit				%a<- Exits DSSH shell\n", KCYN, KWHT);
+	printf("\nDSHH Help Information:\n", KMAG);
+	printf("help				<- Displays help menu with all built-in commands\n", KCYN, KWHT);
+	printf("cd					<- Changes hirectory\n", KCYN, KWHT);
+	printf("history			<- Displays shell command history\n", KCYN, KWHT);
+	printf("issue				<- Reruns command that was run a specified number of commands ago\n", KCYN, KWHT);
+	printf("ls					<- Prints files in current directory\n", KCYN, KWHT);
+	printf("rm					<- Removes directory, or file\n", KCYN, KWHT);
+	printf("rmexcept		<- Removes all files except those specified\n", KCYN, KWHT);
+	printf("exit				<- Exits DSSH shell\n", KCYN, KWHT);
 	return 1;
 }
 
@@ -454,7 +457,10 @@ void sh_loop(void) {
 int main(int argc, char **argv)
 {
 	system("clear");
-	printf("%sDSSH Shell %sBy %sSteven Rakhmanchik %sand Derrick Lin\n\n", KCYN, KWHT, KCYN, KWHT);
+	struct utsname uts;
+	uname(&uts);
+	printf("%s%s %s %son %s%s\n", KCYN, uts.sysname, uts.release, KWHT, KCYN, uts.machine);
+	printf("%sDSSH Shell %sBy %sSteven Rakhmanchik %sand %sDerrick Lin\n\n", KCYN, KWHT, KCYN, KWHT, KCYN);
 	sh_loop();
 
 	return EXIT_SUCCESS;
